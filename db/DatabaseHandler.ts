@@ -4,6 +4,7 @@ import { Animal, AnimalToCreate } from './types';
 export interface IDatabaseHandler {
   getAll(): Promise<Animal[]>;
   addOne(animal: AnimalToCreate): Promise<void>;
+  addMoreThanOne(animals: AnimalToCreate[]): Promise<void>;
   getOne(animalId: string): Promise<Animal>;
   deleteOne(animalId: string): Promise<void>;
   updateInfo(animalId: string, data: Partial<AnimalToCreate>): Promise<void>;
@@ -19,6 +20,10 @@ export class DatabaseHandler implements IDatabaseHandler {
     await db<Animal>('animals').insert(animal);
   }
 
+  async addMoreThanOne(animals: AnimalToCreate[]): Promise<void> {
+    animals.forEach(async (element) => await this.addOne(element));
+  }
+
   async getOne(animalId: string): Promise<Animal> {
     const animal = await db
       .select()
@@ -32,8 +37,8 @@ export class DatabaseHandler implements IDatabaseHandler {
     await db<Animal>('animals')
       .where({ id: animalId })
       .update({ deletedAt: new Date() });
-    const animal = await this.getOne(animalId);
-    console.log(animal);
+    // const animal = await this.getOne(animalId);
+    // console.log(animal);
   }
 
   async updateInfo(
@@ -41,7 +46,7 @@ export class DatabaseHandler implements IDatabaseHandler {
     data: Partial<AnimalToCreate>,
   ): Promise<void> {
     await db<Animal>('animals').where({ id: animalId }).update(data);
-    const animal = await this.getOne(animalId);
-    console.log(animal);
+    // const animal = await this.getOne(animalId);
+    // console.log(animal);
   }
 }
