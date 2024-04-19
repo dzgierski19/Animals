@@ -6,17 +6,17 @@ import { DatabaseService } from './../database/database.service';
 export class AnimalsService {
   constructor(private readonly databaseHandler: DatabaseService) {}
 
-  async getAllAnimals(): Promise<Animal[]> {
+  async getAll(): Promise<Animal[]> {
     return this.databaseHandler.getAll();
   }
-  async addAnimal(animal: AnimalToCreate): Promise<void> {
+  async addOne(animal: AnimalToCreate): Promise<void> {
     await this.databaseHandler.addOne(animal);
   }
 
-  async addMoreThanOneAnimal(animals: AnimalToCreate[]): Promise<void> {
+  async addMoreThanOne(animals: AnimalToCreate[]): Promise<void> {
     await this.databaseHandler.addMoreThanOne(animals);
   }
-  async getAnimal(animalId: string): Promise<Animal> {
+  async getOne(animalId: string): Promise<Animal> {
     const animal = await this.databaseHandler.getOne(animalId);
     if (animal) {
       return animal;
@@ -24,13 +24,13 @@ export class AnimalsService {
     throw new NotFoundException(`${animalId} is not available`);
   }
 
-  async deleteAnimal(animalId: string): Promise<void> {
-    await this.getAnimal(animalId);
+  async deleteOne(animalId: string): Promise<void> {
+    await this.getOne(animalId);
     await this.databaseHandler.deleteOne(animalId);
   }
 
-  async updateAnimal(animalId: string, data: Partial<AnimalToCreate>) {
-    await this.getAnimal(animalId);
+  async updateOne(animalId: string, data: Partial<AnimalToCreate>) {
+    await this.getOne(animalId);
     try {
       await this.databaseHandler.updateInfo(animalId, data);
     } catch (error) {
