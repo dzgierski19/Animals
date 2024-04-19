@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Animal, AnimalToCreate } from './../../db/types';
-import { ItemNotAvailableError } from '../domains/errors/ErrorHandler';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from './../database/database.service';
 
 @Injectable()
 export class AnimalsService {
@@ -13,12 +12,16 @@ export class AnimalsService {
   async addAnimal(animal: AnimalToCreate): Promise<void> {
     await this.databaseHandler.addOne(animal);
   }
+
+  async addMoreThanOneAnimal(animals: AnimalToCreate[]): Promise<void> {
+    await this.databaseHandler.addMoreThanOne(animals);
+  }
   async getAnimal(animalId: string): Promise<Animal> {
     const animal = await this.databaseHandler.getOne(animalId);
     if (animal) {
       return animal;
     }
-    throw new ItemNotAvailableError(`${animalId} is not available`);
+    throw new NotFoundException(`${animalId} is not available`);
   }
 
   async deleteAnimal(animalId: string): Promise<void> {
@@ -28,6 +31,12 @@ export class AnimalsService {
 
   async updateAnimal(animalId: string, data: Partial<AnimalToCreate>) {
     await this.getAnimal(animalId);
-    await this.databaseHandler.updateInfo(animalId, data);
+    try {
+      await this.databaseHandler.updateInfo(animalId, data);
+    } catch (error) {
+      throw new NotFoundException(
+        `Please change your data or properties to update`,
+      );
+    }
   }
 }
