@@ -1,4 +1,4 @@
-const ANIMALTYPE = {
+export const ANIMALTYPE = {
   MAMMAL: 'mammal',
   BIRD: 'bird',
   FISH: 'fish',
