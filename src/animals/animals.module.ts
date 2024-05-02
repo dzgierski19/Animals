@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AnimalsController } from './animals.controller';
 import { AnimalsService } from './animals.service';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from './../database/database.service';
 
 @Module({
   controllers: [AnimalsController],
