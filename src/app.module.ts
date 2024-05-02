@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 
 import { AnimalsModule } from './animals/animals.module';
-import { mockDatabaseService } from './database-mock/database-mock.service';
+import { DatabaseService } from './database/database.service';
 
 @Module({
   imports: [AnimalsModule],
-  providers: [mockDatabaseService],
+  providers: [DatabaseService],
 })
 export class AppModule {}
