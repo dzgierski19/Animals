@@ -3,6 +3,7 @@ import { Animal, AnimalToCreate } from './../../db/types';
 import { db } from './../../db/database';
 
 export interface IDatabaseService {
+  //AnimalsDatabaseAdapter w domenie animalsów
   getAll(): Promise<Animal[]>;
   addOne(animal: AnimalToCreate): Promise<void>;
   addMoreThanOne(animals: AnimalToCreate[]): Promise<void>;
