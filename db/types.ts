@@ -14,6 +14,10 @@ export interface Animal {
   type: AnimalType;
   createdAt: Date;
   deletedAt: Date | null;
+  updatedAt: Date | null;
 }
 
-export type AnimalToCreate = Omit<Animal, 'id' | 'createdAt' | 'deletedAt'>;
+export type AnimalToCreate = Omit<
+  Animal,
+  'id' | 'createdAt' | 'deletedAt' | 'updatedAt'
+>;
