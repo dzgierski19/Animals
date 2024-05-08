@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Animal, AnimalToCreate } from './../../db/types';
-import { db } from './../../db/database';
+import { developmentDb, testDb } from './../../db/database';
+import { Knex } from 'knex';
 
-export interface IDatabaseService {
-  //AnimalsDatabaseAdapter w domenie animalsów
+export interface IDatabaseAdapter {
   getAll(): Promise<Animal[]>;
   addOne(animal: AnimalToCreate): Promise<void>;
   addMoreThanOne(animals: AnimalToCreate[]): Promise<void>;
@@ -13,14 +13,26 @@ export interface IDatabaseService {
 }
 
 @Injectable()
-export class DatabaseService implements IDatabaseService {
+export class DatabaseAdapter implements IDatabaseAdapter {
+  db: Knex;
+  constructor() {
+    if (process.env.NODE_ENV === 'testing') {
+      this.db = testDb;
+    }
+    if (process.env.NODE_ENV === 'development') {
+      this.db = developmentDb;
+    }
+  }
   async getAll(): Promise<Animal[]> {
-    const animals = await db.select().table('animals').whereNull('deletedAt');
+    const animals = await this.db
+      .select()
+      .table('animals')
+      .whereNull('deletedAt');
     return animals;
   }
 
   async addOne(animal: AnimalToCreate): Promise<void> {
-    await db<Animal>('animals').insert(animal);
+    await this.db<Animal>('animals').insert(animal);
   }
 
   async addMoreThanOne(animals: AnimalToCreate[]): Promise<void> {
@@ -28,7 +40,7 @@ export class DatabaseService implements IDatabaseService {
   }
 
   async getOne(animalId: string): Promise<Animal | undefined> {
-    const animal = await db
+    const animal = await this.db
       .select()
       .table('animals')
       .where({ id: animalId })
@@ -37,7 +49,7 @@ export class DatabaseService implements IDatabaseService {
   }
 
   async deleteOne(animalId: string): Promise<void> {
-    await db<Animal>('animals')
+    await this.db<Animal>('animals')
       .where({ id: animalId })
       .whereNull('deletedAt')
       .update({ deletedAt: new Date() });
@@ -49,10 +61,11 @@ export class DatabaseService implements IDatabaseService {
     animalId: string,
     data: Partial<AnimalToCreate>,
   ): Promise<void> {
-    await db<Animal>('animals')
+    await this.db<Animal>('animals')
       .where({ id: animalId })
       .whereNull('deletedAt')
-      .update(data);
+      .update(data)
+      .update({ updatedAt: new Date() });
     // const animal = await this.getOne(animalId);
     // console.log(animal);
   }
