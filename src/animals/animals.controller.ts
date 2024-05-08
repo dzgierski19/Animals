@@ -9,6 +9,7 @@ import {
   UsePipes,
   HttpCode,
   NotFoundException,
+  Query,
 } from '@nestjs/common';
 import { AnimalsService } from './animals.service';
 import { AnimalType } from '../../db/types';
@@ -16,19 +17,31 @@ import { ZodValidationPipe } from './schemas/ZodValidationPipe';
 import {
   CreateAnimalDto,
   CreateAnimalsDto,
+  PaginationDto,
   UpdateAnimalDto,
   createAnimalSchema,
   createAnimalsSchema,
+  paginationSchema,
   updateAnimalSchema,
 } from './schemas/schemas';
+import { pagination } from 'src/middleware/pagination.middleware';
+import { Request, Response } from 'express';
 
 @Controller('animals')
 export class AnimalsController {
   constructor(private readonly animalsService: AnimalsService) {}
 
   @Get()
-  async getAll() {
+  @HttpCode(200)
+  async getAll(
+    @Query(new ZodValidationPipe(paginationSchema)) query: PaginationDto,
+  ) {
     const animals = await this.animalsService.getAll();
+    // console.log(animals);
+    // pagination(animals)(req, res, () => {
+    //   const result = req.body;
+    //   res.json(result);
+    // });
     return animals;
   }
 
@@ -62,13 +75,14 @@ export class AnimalsController {
   }
 
   @Get(':id')
+  @HttpCode(200)
   async getOne(@Param('id') id: string) {
     const animal = await this.animalsService.getOne(id);
     return animal;
   }
 
   @Delete(':id')
-  @HttpCode(200)
+  @HttpCode(204)
   async deleteOne(@Param('id') id: string) {
     await this.animalsService.deleteOne(id);
     return { id };
