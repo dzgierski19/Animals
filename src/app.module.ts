@@ -10,7 +10,7 @@ import { AnimalsController } from './animals/animals.controller';
 import { AnimalsService } from './animals/animals.service';
 
 @Module({
-  imports: [AnimalsModule],
+  providers: [AnimalsModule],
   // controllers: [AnimalsController],
   // providers: [DatabaseAdapter, AnimalsService],
 })
