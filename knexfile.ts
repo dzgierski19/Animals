@@ -3,8 +3,6 @@ import * as path from 'path';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-console.log(process.env.DATABASE_URL);
-
 // Update with your config settings.
 
 // const config: { [key: string]: Knex.Config } = {
@@ -60,7 +58,34 @@ console.log(process.env.DATABASE_URL);
 //   },
 // };
 
-const config: Knex.Config = {
+export const config: { [key: string]: Knex.Config } = {
+  development: {
+    client: 'pg',
+    connection: {
+      // insecureAuth: true,
+      connectionString: process.env.DATABASE_URL,
+    },
+    migrations: {
+      extension: 'ts',
+      directory: path.resolve(__dirname, 'db', 'migrations'),
+      tableName: 'migrations_history',
+    },
+  },
+  test: {
+    client: 'pg',
+    connection: {
+      // insecureAuth: true,
+      connectionString: process.env.TEST_DATABASE_URL,
+    },
+    migrations: {
+      extension: 'ts',
+      directory: path.resolve(__dirname, 'db', 'migrations'),
+      tableName: 'migrations_history',
+    },
+  },
+};
+
+const config2: Knex.Config = {
   client: 'pg',
   connection: {
     // insecureAuth: true,
@@ -77,4 +102,6 @@ const config: Knex.Config = {
   },
 };
 
-export default config;
+// export default config2;
+
+//jesli jest środowisko testowe to wrzucic inny connectionString
