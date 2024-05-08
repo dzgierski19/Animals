@@ -1,10 +1,23 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 
 import { AnimalsModule } from './animals/animals.module';
-import { DatabaseService } from './database/database.service';
+import { DatabaseAdapter } from './database/database.service';
+import {
+  LoggerMiddleware,
+  pagination,
+} from './middleware/pagination.middleware';
+import { AnimalsController } from './animals/animals.controller';
+import { AnimalsService } from './animals/animals.service';
 
 @Module({
   imports: [AnimalsModule],
-  providers: [DatabaseService],
+  // controllers: [AnimalsController],
+  // providers: [DatabaseAdapter, AnimalsService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: 'animals', method: RequestMethod.GET });
+  }
+}
