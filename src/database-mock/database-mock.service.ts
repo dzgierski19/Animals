@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Animal, AnimalToCreate } from 'db/types';
-import { IDatabaseService } from './../database/database.service';
+import { IDatabaseAdapter } from './../database/database.service';
 
 @Injectable()
-export class mockDatabaseService implements IDatabaseService {
+export class mockDatabaseService implements IDatabaseAdapter {
   fakeDb: Animal[] = [];
   async getAll() {
     return this.fakeDb.filter((element) => !element.deletedAt);
@@ -16,6 +16,7 @@ export class mockDatabaseService implements IDatabaseService {
       type: animal.type,
       createdAt: new Date(),
       deletedAt: null,
+      updatedAt: null,
     };
     this.fakeDb.push(createdAnimal);
   }
@@ -46,6 +47,7 @@ export class mockDatabaseService implements IDatabaseService {
         Object.keys(data).forEach(
           (element) => (animal[element] = data[element]),
         );
+        animal.updatedAt = new Date();
       }
       console.log(animal);
     });
