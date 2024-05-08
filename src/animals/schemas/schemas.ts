@@ -28,6 +28,13 @@ export const updateAnimalSchema = z.object({
 
 export type UpdateAnimalDto = z.infer<typeof updateAnimalSchema>;
 
+export const paginationSchema = z.object({
+  page: z.number().optional(),
+  limit: z.number().optional(),
+});
+
+export type PaginationDto = z.infer<typeof paginationSchema>;
+
 //2
 
 export class CreateAnimal {
