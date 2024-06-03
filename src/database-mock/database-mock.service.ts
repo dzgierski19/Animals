@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { Animal, AnimalToCreate } from 'db/types';
-import { IDatabaseAdapter } from './../database/database.service';
+import { Animal, AnimalToCreate } from './../../db/types';
+import { IDatabaseAdapter } from './../animals/animals.db.adapter';
 
 @Injectable()
 export class mockDatabaseService implements IDatabaseAdapter {
