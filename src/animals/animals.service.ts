@@ -1,6 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Animal, AnimalToCreate } from './../../db/types';
-import { IDatabaseAdapter } from './../database/database.service';
+import {
+  AnimalsDatabaseAdapter,
+  IDatabaseAdapter,
+} from './../animals/animals.db.adapter';
 
 export interface IAnimalsService {
   getAll(): Promise<Animal[]>;
@@ -13,7 +16,10 @@ export interface IAnimalsService {
 
 @Injectable()
 export class AnimalsService implements IAnimalsService {
-  constructor(private readonly databaseHandler: IDatabaseAdapter) {}
+  constructor(
+    @Inject('IDatabaseAdapter')
+    private readonly databaseHandler: IDatabaseAdapter,
+  ) {}
 
   async getAll(): Promise<Animal[]> {
     return this.databaseHandler.getAll();
