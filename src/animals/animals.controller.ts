@@ -10,6 +10,8 @@ import {
   HttpCode,
   NotFoundException,
   Query,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { AnimalsService } from './animals.service';
 import { AnimalType } from '../../db/types';
@@ -22,6 +24,8 @@ import {
   createAnimalSchema,
   createAnimalsSchema,
   paginationSchema,
+  stringToNumberSchema,
+  stringToNumberType,
   updateAnimalSchema,
 } from './schemas/schemas';
 import { pagination } from 'src/middleware/pagination.middleware';
@@ -33,16 +37,21 @@ export class AnimalsController {
 
   @Get()
   @HttpCode(200)
+  @UsePipes(new ZodValidationPipe(stringToNumberSchema))
+  // @UsePipes(new ZodValidationPipe(paginationSchema))
   async getAll(
-    @Query(new ZodValidationPipe(paginationSchema)) query: PaginationDto,
+    @Req() req: Request,
+    @Res() res: Response,
+    // @Query() paginated: PaginationDto,
+    @Query('page') page?: stringToNumberType,
+    @Query('limit') limit?: stringToNumberType,
   ) {
+    console.log(page);
     const animals = await this.animalsService.getAll();
-    // console.log(animals);
-    // pagination(animals)(req, res, () => {
-    //   const result = req.body;
-    //   res.json(result);
-    // });
-    return animals;
+    return pagination(animals, limit, page)(req, res, () => {
+      const result = req.body;
+      res.json(result);
+    });
   }
 
   @Post()
