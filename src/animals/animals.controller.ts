@@ -19,16 +19,14 @@ import { ZodValidationPipe } from './schemas/ZodValidationPipe';
 import {
   CreateAnimalDto,
   CreateAnimalsDto,
-  PaginationDto,
   UpdateAnimalDto,
   createAnimalSchema,
   createAnimalsSchema,
-  paginationSchema,
   stringToNumberSchema,
   stringToNumberType,
   updateAnimalSchema,
 } from './schemas/schemas';
-import { pagination } from 'src/middleware/pagination.middleware';
+import { pagination } from './../middleware/pagination.middleware';
 import { Request, Response } from 'express';
 
 @Controller('animals')
