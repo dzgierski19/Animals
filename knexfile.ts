@@ -1,62 +1,7 @@
-import type { Knex } from 'knex';
-import * as path from 'path';
 import * as dotenv from 'dotenv';
 dotenv.config();
-
-// Update with your config settings.
-
-// const config: { [key: string]: Knex.Config } = {
-//   development: {
-//     client: 'pg',
-//     connection: {
-//       connectionString: process.env['DATABASE_URL'],
-//     },
-
-//     migrations: {
-//       directory: path.resolve(__dirname, 'db', 'migrations'),
-//       tableName: 'knex_migrations',
-//     },
-//     seeds: {
-//       directory: path.resolve(__dirname, 'db', 'seeds'),
-//     },
-//   },
-
-//   staging: {
-//     client: 'postgresql',
-//     connection: {
-//       connectionString: process.env['DATABASE_URL'],
-//     },
-//     pool: {
-//       min: 2,
-//       max: 10,
-//     },
-//     migrations: {
-//       directory: path.resolve(__dirname, 'db', 'migrations'),
-//       tableName: 'knex_migrations',
-//     },
-//     seeds: {
-//       directory: path.resolve(__dirname, 'db', 'seeds'),
-//     },
-//   },
-
-//   production: {
-//     client: 'postgresql',
-//     connection: {
-//       connectionString: process.env['DATABASE_URL'],
-//     },
-//     pool: {
-//       min: 2,
-//       max: 10,
-//     },
-//     migrations: {
-//       directory: path.resolve(__dirname, 'db', 'migrations'),
-//       tableName: 'knex_migrations',
-//     },
-//     seeds: {
-//       directory: path.resolve(__dirname, 'db', 'seeds'),
-//     },
-//   },
-// };
+import type { Knex } from 'knex';
+import * as path from 'path';
 
 export const config: { [key: string]: Knex.Config } = {
   development: {
@@ -70,8 +15,12 @@ export const config: { [key: string]: Knex.Config } = {
       directory: path.resolve(__dirname, 'db', 'migrations'),
       tableName: 'migrations_history',
     },
+    seeds: {
+      extension: 'ts',
+      directory: path.resolve(__dirname, 'db', 'seeds'),
+    },
   },
-  test: {
+  testing: {
     client: 'pg',
     connection: {
       // insecureAuth: true,
@@ -82,10 +31,17 @@ export const config: { [key: string]: Knex.Config } = {
       directory: path.resolve(__dirname, 'db', 'migrations'),
       tableName: 'migrations_history',
     },
+    seeds: {
+      extension: 'ts',
+      directory: path.resolve(__dirname, 'db', 'seeds'),
+    },
   },
 };
 
-const config2: Knex.Config = {
+console.log(config.development.client);
+console.log(config.development.dialect);
+
+const configWithoutTest: Knex.Config = {
   client: 'pg',
   connection: {
     // insecureAuth: true,
@@ -102,6 +58,6 @@ const config2: Knex.Config = {
   },
 };
 
-// export default config2;
+export default config;
 
-//jesli jest środowisko testowe to wrzucic inny connectionString
+/// dlaczego musialem zrobic export default config?
