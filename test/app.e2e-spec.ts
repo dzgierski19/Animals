@@ -39,7 +39,7 @@ describe('AppController (e2e)', () => {
   });
   it('/UPDATE animal', async () => {
     const response = await request(app.getHttpServer()).get('/animals');
-    const id = response.body.at(-1).id;
+    const id = response.body.results.at(-1).id;
     return await request(app.getHttpServer())
       .patch(`/animals/${id}`)
       .send({ name: 'UPDATED_FAKE_ANIMAL' })
@@ -48,7 +48,7 @@ describe('AppController (e2e)', () => {
 
   it('/DELETE animal', async () => {
     const response = await request(app.getHttpServer()).get('/animals');
-    const id = response.body.at(-1).id;
+    const id = response.body.results.at(-1).id;
     return await request(app.getHttpServer())
       .delete(`/animals/${id}`)
       .expect(204);
