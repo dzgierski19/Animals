@@ -1,8 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  DatabaseAdapter,
-  IDatabaseAdapter,
-} from './../database/database.service';
+import { AnimalsDatabaseAdapter, IDatabaseAdapter } from './animals.db.adapter';
 import { ANIMALTYPE, AnimalToCreate } from './../../db/types';
 import { AnimalsService, IAnimalsService } from './../animals/animals.service';
 import { mockDatabaseService } from './../database-mock/database-mock.service';
@@ -17,9 +14,9 @@ describe('AnimalsService testing', () => {
     mockService = new mockDatabaseService();
     mockRepo = new AnimalsService(mockService);
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DatabaseAdapter],
+      providers: [AnimalsDatabaseAdapter],
     }).compile();
-    mockService = module.get<DatabaseAdapter>(DatabaseAdapter);
+    mockService = module.get<AnimalsDatabaseAdapter>(AnimalsDatabaseAdapter);
     animal = {
       name: 'fakeAnimal',
       type: ANIMALTYPE.BIRD,
