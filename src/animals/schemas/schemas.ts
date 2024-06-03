@@ -29,20 +29,13 @@ export const updateAnimalSchema = z.object({
 export type UpdateAnimalDto = z.infer<typeof updateAnimalSchema>;
 
 export const paginationSchema = z.object({
-  page: z.number().optional(),
-  limit: z.number().optional(),
+  query: z.object({
+    limit: z.coerce.number().default(5).optional(),
+    page: z.coerce.number().default(1).optional(),
+  }),
 });
 
 export type PaginationDto = z.infer<typeof paginationSchema>;
 
-//2
-
-export class CreateAnimal {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-  @IsEnum(Object.values(ANIMALTYPE), { message: 'Valid type required' })
-  type: AnimalType;
-}
-
-export class UpdateAnimal extends PartialType(CreateAnimal) {}
+export const stringToNumberSchema = z.coerce.number().positive().optional();
+export type stringToNumberType = z.infer<typeof stringToNumberSchema>;
