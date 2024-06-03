@@ -54,5 +54,3 @@ describe('AppController (e2e)', () => {
       .expect(204);
   });
 });
-
-// how to clear db
