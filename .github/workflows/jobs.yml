@@ -6,11 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ubuntu-latest
 
     container:
       image: docker:latest
@@ -43,11 +39,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run unit tests
-        run: npm run test
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U testuser; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
 
       - name: Run database migrations
         run: npm run migrations
+
+      - name: Run unit tests
+        run: npm run test
 
       - name: Run e2e tests
         run: npm run test:e2e
