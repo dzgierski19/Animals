@@ -48,14 +48,13 @@ jobs:
       - name: Echo DATABASE_URL
         run: echo $DATABASE_URL
         env:
-          # DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
-          DATABASE_URL: postgres://testuser@localhost:5432/testdb
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
 
       - name: Run database migrations
         run: npm run migrations
         env:
           NODE_ENV: testing
-          DATABASE_URL: postgres://testuser@localhost:5432/testdb
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
 
       - name: Run unit tests
         run: npm run test
@@ -71,4 +70,4 @@ jobs:
           fi
         env:
           NODE_ENV: testing
-          DATABASE_URL: postgres://testuser@localhost:5432/testdb
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
