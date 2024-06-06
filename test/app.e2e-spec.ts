@@ -3,6 +3,8 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { ANIMALTYPE } from './../db/types';
+import { Knex } from 'knex';
+import { closeKnex } from './../db/database';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -19,10 +21,9 @@ describe('AppController (e2e)', () => {
   });
 
   afterAll(async () => {
-    if (app) {
-      await app.close();
-      console.log('app closed...');
-    } else console.log('app is not closed');
+    await app.close();
+    closeKnex();
+    console.log('app closed...');
   });
 
   it('/GET animals', async () => {
