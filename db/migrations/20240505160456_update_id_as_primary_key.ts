@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
   await knex.raw('CREATE EXTENSION IF NOT EXISTS "pgcrypto"');
 
   await knex.schema.alterTable(tableName, function (table) {
-    table.uuid('id').defaultTo(knex.raw('gen_random_uuid()')).notNullable();
+    table.uuid('new_id').defaultTo(knex.raw('gen_random_uuid()')).notNullable();
   });
   await knex.schema.alterTable(tableName, function (table) {
     table.dropColumn('id');
