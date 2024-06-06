@@ -18,7 +18,7 @@ jobs:
         env:
           POSTGRES_DB: testdb
           POSTGRES_USER: testuser
-          # POSTGRES_PASSWORD: testpassword
+          POSTGRES_PASSWORD: testpassword
 
     steps:
       - name: Checkout code
