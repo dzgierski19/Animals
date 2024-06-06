@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Animal, AnimalToCreate } from './../../db/types';
 import { developmentDb, testDb } from './../../db/database';
 import { Knex } from 'knex';
@@ -14,7 +14,7 @@ export interface IDatabaseAdapter {
 
 @Injectable()
 export class AnimalsDatabaseAdapter implements IDatabaseAdapter {
-  db: Knex;
+  readonly db: Knex;
 
   constructor() {
     // console.log(process.env.NODE_ENV);
@@ -66,9 +66,8 @@ export class AnimalsDatabaseAdapter implements IDatabaseAdapter {
     await this.db<Animal>('animals')
       .where({ id: animalId })
       .whereNull('deletedAt')
-      .update(data)
-      .update({ updatedAt: new Date() });
-    // const animal = await this.getOne(animalId);
+      .update({ ...data, updatedAt: new Date() });
+    // const animal = await this.getOne(animalId);w3
     // console.log(animal);
   }
 }
