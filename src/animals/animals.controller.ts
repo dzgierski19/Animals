@@ -44,7 +44,7 @@ export class AnimalsController {
     @Query('page') page?: stringToNumberType,
     @Query('limit') limit?: stringToNumberType,
   ) {
-    console.log(page);
+    // console.log(page);
     const animals = await this.animalsService.getAll();
     return pagination(animals, limit, page)(req, res, () => {
       const result = req.body;
@@ -64,7 +64,7 @@ export class AnimalsController {
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createAnimalsSchema))
   async addMoreThanOne(@Body() animals: CreateAnimalsDto) {
-    console.log(animals);
+    // console.log(animals);
     await this.animalsService.addMoreThanOne(animals);
   }
 
@@ -75,7 +75,7 @@ export class AnimalsController {
     @Body() animals: CreateAnimalDto[],
   ) {
     const filteredType = animals.filter((element) => element.type === type);
-    console.log(filteredType);
+    // console.log(filteredType);
     if (!filteredType)
       throw new NotFoundException(`User with ${type} not found`);
     await this.animalsService.addMoreThanOne(filteredType);
