@@ -56,7 +56,7 @@ export class AnimalsController {
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createAnimalSchema))
   async addOne(@Body() animal: CreateAnimalDto) {
-    console.log(animal);
+    // console.log(animal);
     await this.animalsService.addOne(animal);
   }
 
