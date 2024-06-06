@@ -1,3 +1,5 @@
+name: E2E Tests
+
 on:
   push:
     branches:
@@ -8,10 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # container:
-    #   image: docker:latest
-    #   options: --privileged
-
     services:
       postgres:
         image: postgres:13
@@ -21,28 +19,27 @@ jobs:
           POSTGRES_DB: testdb
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: testpassword
-        options: >-
-          --health-cmd="pg_isready -U testuser
-          --health-interval=10s
-          --health-timeout=5s
+        options: >
+          --health-cmd="pg_isready -U $${POSTGRES_USER}" 
+          --health-interval=10s 
+          --health-timeout=5s 
           --health-retries=5
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v2
         with:
           node-version: '18'
 
       - name: Verify Docker installation
         run: docker --version
 
-      - name: Verify Node.js and npm installation
-        run: |
-          node -v
-          npm -v
+      - name: List Docker containers
+        run: docker ps -a
+
       - name: Install dependencies
         run: npm ci
 
@@ -53,15 +50,29 @@ jobs:
             sleep 2
           done
 
+      - name: Echo DATABASE_URL
+        run: echo $DATABASE_URL
+        env:
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
+
       - name: Run database migrations
         run: npm run migrations
         env:
-          TEST_DATABASE_URL: postgres://testuser@localhost:5432/testdb
+          NODE_ENV: testing
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
 
       - name: Run unit tests
         run: npm run test
+        env:
+          NODE_ENV: testing
 
       - name: Run e2e tests
-        run: npm run test:e2e
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            set NODE_ENV=testing && npm run test:e2e
+          else
+            npm run test:e2e
+          fi
         env:
-          TEST_DATABASE_URL: postgres://testuser@localhost:5432/testdb
+          NODE_ENV: testing
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
