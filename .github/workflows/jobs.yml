@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
 
     services:
       postgres:
@@ -47,8 +49,6 @@ jobs:
 
       - name: Echo DATABASE_URL
         run: echo $DATABASE_URL
-        env:
-          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
 
       - name: Run database migrations
         run: npm run migrations
@@ -58,8 +58,6 @@ jobs:
 
       - name: Run unit tests
         run: npm run test
-        env:
-          NODE_ENV: testing
 
       - name: Run e2e tests
         run: |
@@ -68,6 +66,3 @@ jobs:
           else
             npm run test:e2e
           fi
-        env:
-          NODE_ENV: testing
-          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
