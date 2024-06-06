@@ -8,6 +8,10 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
 
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
     services:
       postgres:
         image: postgres:latest
@@ -22,10 +26,6 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - name: Checkout code
