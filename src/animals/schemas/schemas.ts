@@ -1,9 +1,5 @@
 import { z } from 'zod';
 import { ANIMALTYPE, AnimalType } from '../../../db/types';
-import { PartialType } from '@nestjs/mapped-types';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-
-//1
 
 export const createAnimalSchema = z.object({
   name: z.string().min(3),
@@ -12,12 +8,7 @@ export const createAnimalSchema = z.object({
 
 export type CreateAnimalDto = z.infer<typeof createAnimalSchema>;
 
-export const createAnimalsSchema = z.array(
-  z.object({
-    name: z.string().min(3),
-    type: z.nativeEnum(ANIMALTYPE),
-  }),
-);
+export const createAnimalsSchema = z.array(createAnimalSchema);
 
 export type CreateAnimalsDto = z.infer<typeof createAnimalsSchema>;
 
@@ -29,10 +20,8 @@ export const updateAnimalSchema = z.object({
 export type UpdateAnimalDto = z.infer<typeof updateAnimalSchema>;
 
 export const paginationSchema = z.object({
-  query: z.object({
-    limit: z.coerce.number().default(5).optional(),
-    page: z.coerce.number().default(1).optional(),
-  }),
+  limit: z.coerce.number().default(5).optional(),
+  page: z.coerce.number().default(1).optional(),
 });
 
 export type PaginationDto = z.infer<typeof paginationSchema>;
