@@ -4,7 +4,9 @@ import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { ANIMALTYPE } from './../db/types';
 import { Knex } from 'knex';
-import { closeKnex } from './../db/database';
+import { clearDatabase, closeKnex } from './../db/database';
+import { AnimalsDatabaseAdapter } from './../src/animals/animals.db.adapter';
+import { AnimalsModule } from './../src/animals/animals.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -18,6 +20,10 @@ describe('AppController (e2e)', () => {
     if (process.env.NODE_ENV !== 'testing') {
       throw new Error('Please change your environment to "testing"');
     }
+  });
+
+  afterEach(async () => {
+    await clearDatabase();
   });
 
   afterAll(async () => {
@@ -35,7 +41,7 @@ describe('AppController (e2e)', () => {
   it('/POST animal', async () => {
     return await request(app.getHttpServer())
       .post('/animals')
-      .send({ name: 'FAKE_ANIMAL', type: ANIMALTYPE.BIRD })
+      .send([{ name: 'FAKE_ANIMAL', type: ANIMALTYPE.BIRD }])
       .expect(HttpStatus.CREATED);
   });
   it('/UPDATE animal', async () => {
@@ -48,10 +54,12 @@ describe('AppController (e2e)', () => {
   });
 
   it('/DELETE animal', async () => {
-    const response = await request(app.getHttpServer()).get('/animals');
-    const id = response.body.results.at(-1).id;
+    const animalDbAdapter = app.get('IDatabaseAdapter');
+    await animalDbAdapter.addOne({ name: 'FAKE_NAME', type: 'bird' });
+    const animals = await animalDbAdapter.getAll();
+    console.log(animals);
     return await request(app.getHttpServer())
-      .delete(`/animals/${id}`)
+      .delete(`/animals/${animals[0].id}`)
       .expect(204);
   });
 });
