@@ -20,12 +20,12 @@ export class mockDatabaseService implements IDatabaseAdapter {
     };
     this.fakeDb.push(createdAnimal);
   }
-  async addMoreThanOne(animals: AnimalToCreate[]) {
-    animals.forEach((animal) => {
-      this.addOne(animal);
-    });
-    console.log(animals);
-  }
+  // async addMoreThanOne(animals: AnimalToCreate[]) {
+  //   animals.forEach((animal) => {
+  //     this.addOne(animal);
+  //   });
+  //   console.log(animals);
+  // }
   async getOne(animalId: string) {
     return this.fakeDb.find((animal) => {
       if (!animal.deletedAt && animal.id === animalId) {

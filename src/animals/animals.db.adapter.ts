@@ -6,7 +6,7 @@ import { Knex } from 'knex';
 export interface IDatabaseAdapter {
   getAll(): Promise<Animal[]>;
   addOne(animal: AnimalToCreate): Promise<void>;
-  addMoreThanOne(animals: AnimalToCreate[]): Promise<void>;
+  // addMoreThanOne(animals: AnimalToCreate[]): Promise<void>;
   getOne(animalId: string): Promise<Animal | undefined>;
   deleteOne(animalId: string): Promise<void>;
   updateInfo(animalId: string, data: Partial<AnimalToCreate>): Promise<void>;

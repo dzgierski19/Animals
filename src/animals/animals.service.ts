@@ -8,7 +8,7 @@ import {
 export interface IAnimalsService {
   getAll(): Promise<Animal[]>;
   addOne(animal: AnimalToCreate): Promise<void>;
-  addMoreThanOne(animals: AnimalToCreate[]): Promise<void>;
+  // addMoreThanOne(animals: AnimalToCreate[]): Promise<void>;
   getOne(animalId: string): Promise<Animal>;
   deleteOne(animalId: string): Promise<void>;
   updateOne(animalId: string, data: Partial<AnimalToCreate>): Promise<void>;
@@ -28,9 +28,9 @@ export class AnimalsService implements IAnimalsService {
     await this.databaseHandler.addOne(animal);
   }
 
-  async addMoreThanOne(animals: AnimalToCreate[]): Promise<void> {
-    await this.databaseHandler.addMoreThanOne(animals);
-  }
+  // async addMoreThanOne(animals: AnimalToCreate[]): Promise<void> {
+  //   await this.databaseHandler.addMoreThanOne(animals);
+  // }
   async getOne(animalId: string): Promise<Animal> {
     const animal = await this.databaseHandler.getOne(animalId);
     if (animal) {
