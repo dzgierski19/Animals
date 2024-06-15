@@ -19,6 +19,7 @@ import { ZodValidationPipe } from './schemas/ZodValidationPipe';
 import {
   CreateAnimalDto,
   CreateAnimalsDto,
+  PaginationDto,
   UpdateAnimalDto,
   createAnimalSchema,
   createAnimalsSchema,
@@ -26,7 +27,7 @@ import {
   stringToNumberType,
   updateAnimalSchema,
 } from './schemas/schemas';
-import { pagination } from './../middleware/pagination.middleware';
+import { paginate } from './../middleware/pagination.middleware';
 import { Request, Response } from 'express';
 
 @Controller('animals')
@@ -36,17 +37,15 @@ export class AnimalsController {
   @Get()
   @HttpCode(200)
   @UsePipes(new ZodValidationPipe(stringToNumberSchema))
-  // @UsePipes(new ZodValidationPipe(paginationSchema))
   async getAll(
     @Req() req: Request,
     @Res() res: Response,
-    // @Query() paginated: PaginationDto,
     @Query('page') page?: stringToNumberType,
     @Query('limit') limit?: stringToNumberType,
   ) {
     // console.log(page);
     const animals = await this.animalsService.getAll();
-    return pagination(animals, limit, page)(req, res, () => {
+    return paginate(animals, limit, page)(req, res, () => {
       const result = req.body;
       res.json(result);
     });
@@ -54,18 +53,11 @@ export class AnimalsController {
 
   @Post()
   @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(createAnimalSchema))
-  async addOne(@Body() animal: CreateAnimalDto) {
-    // console.log(animal);
-    await this.animalsService.addOne(animal);
-  }
-
-  @Post('add-few')
-  @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createAnimalsSchema))
-  async addMoreThanOne(@Body() animals: CreateAnimalsDto) {
-    // console.log(animals);
-    await this.animalsService.addMoreThanOne(animals);
+  async addOneOrMore(@Body() animals: CreateAnimalsDto) {
+    animals.forEach(
+      async (element) => await this.animalsService.addOne(element),
+    );
   }
 
   @Post(':type')
