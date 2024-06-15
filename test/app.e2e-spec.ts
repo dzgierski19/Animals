@@ -44,9 +44,19 @@ describe('AppController (e2e)', () => {
       .send([{ name: 'FAKE_ANIMAL', type: ANIMALTYPE.BIRD }])
       .expect(HttpStatus.CREATED);
   });
+
   it('/UPDATE animal', async () => {
+    await request(app.getHttpServer())
+      .post('/animals')
+      .send([
+        { name: 'FAKE_ANIMAL', type: ANIMALTYPE.INSECT },
+        { name: 'FAKE_ANIMAL_2', type: ANIMALTYPE.BIRD },
+      ]);
     const response = await request(app.getHttpServer()).get('/animals');
-    const id = response.body.results.at(-1).id;
+    const id = response.body.results.at(0).id;
+    const animals = await request(app.getHttpServer()).get('/animals');
+    // console.log(animals.body.results.length);
+    expect(animals.body.results.at(-1).name).toBe('FAKE_ANIMAL_2');
     return await request(app.getHttpServer())
       .patch(`/animals/${id}`)
       .send({ name: 'UPDATED_FAKE_ANIMAL' })
@@ -57,7 +67,7 @@ describe('AppController (e2e)', () => {
     const animalDbAdapter = app.get('IDatabaseAdapter');
     await animalDbAdapter.addOne({ name: 'FAKE_NAME', type: 'bird' });
     const animals = await animalDbAdapter.getAll();
-    console.log(animals);
+    // console.log(animals);
     return await request(app.getHttpServer())
       .delete(`/animals/${animals[0].id}`)
       .expect(204);
