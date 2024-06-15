@@ -9,3 +9,9 @@ export const closeKnex = () => {
     testDb.destroy();
   }
 };
+
+export const clearDatabase = async () => {
+  if (process.env.NODE_ENV === 'testing') {
+    await testDb('animals').truncate();
+  }
+};
