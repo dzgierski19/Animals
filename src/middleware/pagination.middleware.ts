@@ -1,7 +1,10 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
-type paginate = Record<'next' | 'previous', { page: number; limit: number }>;
+type paginate = Record<
+  'next' | 'previous' | 'current',
+  { page: number; limit: number }
+>;
 type result<T> = paginate & Record<'results', T[]>;
 
 // @Injectable()
@@ -42,27 +45,28 @@ type result<T> = paginate & Record<'results', T[]>;
 //   }
 // }
 
-export function pagination<T>(model: T[], limit: number = 5, page: number = 1) {
+export function paginate<T>(model: T[], limit: number = 5, page: number = 1) {
   return (req: Request, res: Response, next: NextFunction) => {
-    // console.log(req);
-    // const { page, limit } = req.query;
-    // console.log(req.query);
-    // const limitToNumber = +limit || 5;
-    // const pageToNumber = +page || 1;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const result = {} as result<T>;
-    if (endIndex < model.length) {
-      result.next = {
-        page: page + 1,
-        limit: limit,
-      };
-    }
     if (startIndex > 0) {
       result.previous = {
         page: page - 1,
         limit: limit,
       };
+      result.current = { page: page, limit: limit };
+    }
+    if (endIndex < model.length) {
+      result.current = { page: page, limit: limit };
+      result.next = {
+        page: page + 1,
+        limit: limit,
+      };
+    } else {
+      const results = model.slice(startIndex, endIndex);
+      result.current = { page: page, limit: results.length };
+      result.results = results;
     }
     result.results = model.slice(startIndex, endIndex);
     req.body = result;
