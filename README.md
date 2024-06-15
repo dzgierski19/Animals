@@ -10,7 +10,7 @@ GET
 should return all animals previously send to the app
 
 POST
-should post an animal or animals to database
+should post list of animals to database
 
 * Create an endpoint: /animals/:id
 
@@ -23,6 +23,10 @@ should update animal info
 DELETE
 should delete animal from database
 
+* Create an endpoint: /animals/type/:type
+
+POST
+should post a list of animals of a specific type
 
 ## Technologies
 
