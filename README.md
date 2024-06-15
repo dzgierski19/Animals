@@ -15,7 +15,7 @@ should post an animal or animals to database
 * Create an endpoint: /animals/:id
 
 GET
-should return an animal by id or 
+should return an animal by id
 
 PUT
 should update animal info
