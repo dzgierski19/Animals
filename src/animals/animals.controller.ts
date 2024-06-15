@@ -60,17 +60,21 @@ export class AnimalsController {
     );
   }
 
-  @Post(':type')
+  @Post('type/:type')
   @HttpCode(201)
+  // @UsePipes(new ZodValidationPipe(createAnimalsSchema))
   async addByType(
     @Param('type') type: AnimalType,
-    @Body() animals: CreateAnimalDto[],
+    @Body(new ZodValidationPipe(createAnimalsSchema)) animals: CreateAnimalsDto,
   ) {
+    console.log(type);
     const filteredType = animals.filter((element) => element.type === type);
-    // console.log(filteredType);
-    if (!filteredType)
-      throw new NotFoundException(`User with ${type} not found`);
-    await this.animalsService.addMoreThanOne(filteredType);
+    console.log(filteredType);
+    if (!filteredType.length)
+      throw new NotFoundException(`Animal with ${type} type not found`);
+    filteredType.forEach(
+      async (element) => await this.animalsService.addOne(element),
+    );
   }
 
   @Get(':id')
