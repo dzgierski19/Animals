@@ -1,12 +1,10 @@
 import { z } from 'zod';
 import { ANIMALTYPE, AnimalType } from '../../../db/types';
 
-export const createAnimalSchema = z.object({
+const createAnimalSchema = z.object({
   name: z.string().min(3),
   type: z.nativeEnum(ANIMALTYPE),
 });
-
-export type CreateAnimalDto = z.infer<typeof createAnimalSchema>;
 
 export const createAnimalsSchema = z.array(createAnimalSchema);
 
