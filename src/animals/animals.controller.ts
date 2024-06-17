@@ -17,11 +17,8 @@ import { AnimalsService } from './animals.service';
 import { AnimalType } from '../../db/types';
 import { ZodValidationPipe } from './schemas/ZodValidationPipe';
 import {
-  CreateAnimalDto,
   CreateAnimalsDto,
-  PaginationDto,
   UpdateAnimalDto,
-  createAnimalSchema,
   createAnimalsSchema,
   stringToNumberSchema,
   stringToNumberType,
