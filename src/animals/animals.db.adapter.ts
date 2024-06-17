@@ -37,9 +37,9 @@ export class AnimalsDatabaseAdapter implements IDatabaseAdapter {
     await this.db<Animal>('animals').insert(animal);
   }
 
-  async addMoreThanOne(animals: AnimalToCreate[]): Promise<void> {
-    animals.forEach(async (element) => await this.addOne(element));
-  }
+  // async addMoreThanOne(animals: AnimalToCreate[]): Promise<void> {
+  //   animals.forEach(async (element) => await this.addOne(element));
+  // }
 
   async getOne(animalId: string): Promise<Animal | undefined> {
     const animal = await this.db
