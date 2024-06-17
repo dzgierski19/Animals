@@ -48,8 +48,8 @@ jobs:
             sleep 2
           done
 
-      - name: Echo DATABASE_URL
-        run: echo $DATABASE_URL
+      - name: Echo TEST_DATABASE_URL
+        run: echo $TEST_DATABASE_URL
 
       - name: Run database migrations
         run: npm run migrations
