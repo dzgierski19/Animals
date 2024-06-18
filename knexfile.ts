@@ -38,9 +38,6 @@ export const config: { [key: string]: Knex.Config } = {
   },
 };
 
-console.log(config.development.client);
-console.log(config.development.dialect);
-
 const configWithoutTest: Knex.Config = {
   client: 'pg',
   connection: {
