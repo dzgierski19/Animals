@@ -52,24 +52,24 @@ describe('AppController (e2e)', () => {
         { name: 'FAKE_ANIMAL', type: ANIMALTYPE.INSECT },
         { name: 'FAKE_ANIMAL_2', type: ANIMALTYPE.BIRD },
       ]);
-    const response = await request(app.getHttpServer()).get('/animals');
-    const id = response.body.results.at(0).id;
-    const animals = await request(app.getHttpServer()).get('/animals');
-    // console.log(animals.body.results.length);
-    expect(animals.body.results.at(-1).name).toBe('FAKE_ANIMAL_2');
-    return await request(app.getHttpServer())
-      .patch(`/animals/${id}`)
+    const animalDbAdapter = app.get('IDatabaseAdapter');
+    const animals = await animalDbAdapter.getAll();
+    await request(app.getHttpServer())
+      .patch(`/animals/${animals.at(-1).id}`)
       .send({ name: 'UPDATED_FAKE_ANIMAL' })
       .expect(204);
+    const animalsAfterUpdate = await animalDbAdapter.getAll();
+    expect(animalsAfterUpdate.at(-1).name).toBe('UPDATED_FAKE_ANIMAL');
   });
 
   it('/DELETE animal', async () => {
     const animalDbAdapter = app.get('IDatabaseAdapter');
     await animalDbAdapter.addOne({ name: 'FAKE_NAME', type: 'bird' });
     const animals = await animalDbAdapter.getAll();
-    // console.log(animals);
-    return await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .delete(`/animals/${animals[0].id}`)
       .expect(204);
+    const animalsAfterDelete = await animalDbAdapter.getAll();
+    expect(animalsAfterDelete.length).toBe(0);
   });
 });
